@@ -51,6 +51,7 @@ Options:
   -o, --output= dir     : place output files in specified directory (default
                           current)
   -s, --sections	: preserve sections
+  -d, --docseparator    : separate pages with given string
   -h, --help            : display this help and exit
 """
 
@@ -630,7 +631,7 @@ def main():
     try:
         long_opts = ['help', 'compress', 'bytes=', 'basename=', 'links', 'ns=',
                 'sections', 'output=', 'version', 'docseparator=']
-        opts, args = getopt.gnu_getopt(sys.argv[1:], 'cb:hln:o:B:sv', long_opts)
+        opts, args = getopt.gnu_getopt(sys.argv[1:], 'cb:hln:o:B:svd:', long_opts)
     except getopt.GetoptError:
         show_usage(script_name)
         sys.exit(1)
@@ -673,7 +674,7 @@ def main():
         elif opt in ('-v', '--version'):
                 print 'WikiExtractor.py version:', version
                 sys.exit(0)
-        elif opt == '--docseparator':
+        elif opt in ('-d', '--docseparator'):
                 docseparator = arg
 
     if len(args) > 0:
