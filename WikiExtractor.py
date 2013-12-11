@@ -116,14 +116,20 @@ version = '2.5'
 
 ##### Main function ###########################################################
 
-def WikiDocument(out, id, title, text):
+def WikiDocument(out, id, title, text, docseparator=None):
     url = get_url(id, prefix)
-    header = '<doc id="%s" url="%s" title="%s">\n' % (id, url, title)
+    header = ''
+    if docseparator is None:
+        header = '<doc id="%s" url="%s" title="%s">\n' % (id, url, title)
+
     # Separate header from text with a newline.
     header += title + '\n'
     header = header.encode('utf-8')
     text = clean(text)
-    footer = "\n</doc>"
+    footer = docseparator
+    if docseparator is None:
+        footer = "\n</doc>"
+
     out.reserve(len(header) + len(text) + len(footer))
     print >> out, header
     for line in compact(text):
@@ -555,7 +561,7 @@ class OutputSplitter:
 
 tagRE = re.compile(r'(.*?)<(/?\w+)[^>]*>(?:([^<]*)(<.*?>)?)?')
 
-def process_data(input, output):
+def process_data(input, output, docseparator=None):
     global prefix
 
     page = []
@@ -596,7 +602,7 @@ def process_data(input, output):
                     not redirect:
                 print id, title.encode('utf-8')
                 sys.stdout.flush()
-                WikiDocument(output, id, title, ''.join(page))
+                WikiDocument(output, id, title, ''.join(page), docseparator)
             id = None
             page = []
         elif tag == 'base':
@@ -685,7 +691,7 @@ def main():
         ignoreTag('a')
 
     output_splitter = OutputSplitter(compress, file_size, output_dir)
-    process_data(sys.stdin, output_splitter)
+    process_data(sys.stdin, output_splitter, docseparator)
     output_splitter.close()
 
 if __name__ == '__main__':
