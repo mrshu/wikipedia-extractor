@@ -622,7 +622,8 @@ def main():
     script_name = os.path.basename(sys.argv[0])
 
     try:
-        long_opts = ['help', 'compress', 'bytes=', 'basename=', 'links', 'ns=', 'sections', 'output=', 'version']
+        long_opts = ['help', 'compress', 'bytes=', 'basename=', 'links', 'ns=',
+                'sections', 'output=', 'version', 'docseparator=']
         opts, args = getopt.gnu_getopt(sys.argv[1:], 'cb:hln:o:B:sv', long_opts)
     except getopt.GetoptError:
         show_usage(script_name)
@@ -631,6 +632,8 @@ def main():
     compress = False
     file_size = 500 * 1024
     output_dir = '.'
+
+    docseparator = None
 
     for opt, arg in opts:
         if opt in ('-h', '--help'):
@@ -664,6 +667,8 @@ def main():
         elif opt in ('-v', '--version'):
                 print 'WikiExtractor.py version:', version
                 sys.exit(0)
+        elif opt == '--docseparator':
+                docseparator = arg
 
     if len(args) > 0:
         show_usage(script_name)
